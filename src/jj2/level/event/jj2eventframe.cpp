@@ -283,6 +283,7 @@ const unsigned char pickupAnims[] = {
  */
 bool JJ2Event::prepareStep (unsigned int ticks, int msps) {
 
+	JJ2LevelPlayer *levelPlayer;
 	int count;
 
 
@@ -305,7 +306,7 @@ bool JJ2Event::prepareStep (unsigned int ticks, int msps) {
 
 	for (count = 0; count < nPlayers; count++) {
 
-		JJ2LevelPlayer *levelPlayer = players[count].getJJ2LevelPlayer();
+		levelPlayer = players[count].getJJ2LevelPlayer();
 
 		// Check if the player is touching the event
 		if (levelPlayer->overlap(x, y, F32, F32)) {
@@ -403,6 +404,8 @@ void AmmoJJ2Event::draw (unsigned int ticks, int change) {
 	an->setFrame((int)ticks / 60, true);
 	an->draw(drawX + F16, drawY + F16 + F32);
 
+	return;
+
 }
 
 
@@ -423,6 +426,8 @@ void CoinGemJJ2Event::mapPalette (Anim* anim, int start) {
 		palette[count + 128].r = palette[count + 128].g = palette[count + 128].b = 255;
 
 	anim->setPalette(palette, 128, 128);
+
+	return;
 
 }
 
@@ -494,6 +499,8 @@ void CoinGemJJ2Event::draw (unsigned int ticks, int change) {
 
 	an->draw(drawX + F16, drawY + F16 + F32);
 
+	return;
+
 }
 
 
@@ -519,6 +526,8 @@ void FoodJJ2Event::draw (unsigned int ticks, int change) {
 
 	an->setFrame((int)ticks / 60, true);
 	an->draw(drawX + F16, drawY + F16 + F32);
+
+	return;
 
 }
 
@@ -599,6 +608,8 @@ void SpringJJ2Event::draw (unsigned int ticks, int change) {
 	an->setFrame(0, true);
 	an->draw(drawX + F16, drawY + F16);
 
+	return;
+
 }
 
 
@@ -659,4 +670,7 @@ void OtherJJ2Event::draw (unsigned int ticks, int change) {
 
 	an->draw(drawX + F16, drawY + F16);
 
+	return;
+
 }
+

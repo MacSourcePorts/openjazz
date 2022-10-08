@@ -48,6 +48,9 @@ int JJ1BonusLevel::loadSprites () {
 
 	File *file;
 	unsigned char* pixels;
+	int pos, maskLength, pixelsLength;
+	int width, height;
+	int count;
 
 	try {
 
@@ -64,14 +67,14 @@ int JJ1BonusLevel::loadSprites () {
 	sprites = file->loadShort(256);
 	spriteSet = new Sprite[sprites];
 
-	for (int i = 0; i < sprites; i++) {
+	for (count = 0; count < sprites; count++) {
 
 		// Load dimensions
-		int width = file->loadShort(SW);
-		int height = file->loadShort(SH);
+		width = file->loadShort(SW);
+		height = file->loadShort(SH);
 
-		int pixelsLength = file->loadShort();
-		int maskLength = file->loadShort();
+		pixelsLength = file->loadShort();
+		maskLength = file->loadShort();
 
 		// Sprites can be either masked or not masked.
 		if (pixelsLength != 0xFFFF) {
@@ -79,11 +82,11 @@ int JJ1BonusLevel::loadSprites () {
 			// Masked
 			width <<= 2;
 
-			int pos = file->tell() + (pixelsLength << 2) + maskLength;
+			pos = file->tell() + (pixelsLength << 2) + maskLength;
 
 			// Read scrambled, masked pixel data
 			pixels = file->loadPixels(width * height, 0);
-			spriteSet[i].setPixels(pixels, width, height, 0);
+			spriteSet[count].setPixels(pixels, width, height, 0);
 
 			delete[] pixels;
 
@@ -95,7 +98,7 @@ int JJ1BonusLevel::loadSprites () {
 
 			// Read pixel data
 			pixels = file->loadBlock(width * height);
-			spriteSet[i].setPixels(pixels, width, height, 0);
+			spriteSet[count].setPixels(pixels, width, height, 0);
 
 			delete[] pixels;
 
@@ -104,7 +107,7 @@ int JJ1BonusLevel::loadSprites () {
 			// Zero-length sprite
 
 			// Create blank sprite
-			spriteSet[i].clearPixels();
+			spriteSet[count].clearPixels();
 
 		}
 
@@ -130,8 +133,6 @@ int JJ1BonusLevel::loadTiles (char *fileName) {
 	unsigned char *pixels;
 	unsigned char *sorted;
 	int count, x, y;
-
-	direction = 0;
 
 	try {
 
@@ -210,7 +211,7 @@ JJ1BonusLevel::JJ1BonusLevel (Game* owner, char * fileName, bool multi) : Level(
 
 	} catch (int e) {
 
-		throw;
+		throw e;
 
 	}
 
@@ -222,7 +223,7 @@ JJ1BonusLevel::JJ1BonusLevel (Game* owner, char * fileName, bool multi) : Level(
 
 		delete font;
 
-		throw;
+		throw e;
 
 	}
 
@@ -375,6 +376,8 @@ JJ1BonusLevel::JJ1BonusLevel (Game* owner, char * fileName, bool multi) : Level(
 
 	video.setTitle("BONUS LEVEL");
 
+	return;
+
 }
 
 
@@ -393,6 +396,8 @@ JJ1BonusLevel::~JJ1BonusLevel () {
 	delete font;
 
 	video.setTitle(NULL);
+
+	return;
 
 }
 
@@ -472,6 +477,8 @@ void JJ1BonusLevel::receive (unsigned char* buffer) {
 
 	}
 
+	return;
+
 }
 
 
@@ -481,27 +488,34 @@ void JJ1BonusLevel::receive (unsigned char* buffer) {
  * @return Error code
  */
 int JJ1BonusLevel::step () {
+
+	JJ1BonusLevelPlayer* bonusPlayer;
+	fixed playerX, playerY;
+	int gridX, gridY;
+	int count;
+
 	// Check if time has run out
 	if (ticks > endTime) return LOST;
 
+
 	// Apply controls to local player
-	for (int i = 0; i < PCONTROLS; i++)
-		localPlayer->setControl(i, controls.getState(i));
+	for (count = 0; count < PCONTROLS; count++)
+		localPlayer->setControl(count, controls.getState(count));
 
 	// Process players
-	for (int i = 0; i < nPlayers; i++) {
+	for (count = 0; count < nPlayers; count++) {
 
-		JJ1BonusLevelPlayer* bonusPlayer = players[i].getJJ1BonusLevelPlayer();
+		bonusPlayer = players[count].getJJ1BonusLevelPlayer();
 
-		fixed playerX = bonusPlayer->getX();
-		fixed playerY = bonusPlayer->getY();
+		playerX = bonusPlayer->getX();
+		playerY = bonusPlayer->getY();
 
 		bonusPlayer->step(ticks, 16, this);
 
 		if ((bonusPlayer->getZ() < FH) && isEvent(playerX, playerY)) {
 
-			int gridX = FTOT(playerX) & 255;
-			int gridY = FTOT(playerY) & 255;
+			gridX = FTOT(playerX) & 255;
+			gridY = FTOT(playerY) & 255;
 
 			switch (grid[gridY][gridX].event) {
 
@@ -519,7 +533,7 @@ int JJ1BonusLevel::step () {
 
 					if (bonusPlayer->getGems() >= items) {
 
-						players[i].addLife();
+						players[count].addLife();
 
 						return WON;
 
@@ -556,9 +570,14 @@ int JJ1BonusLevel::step () {
 void JJ1BonusLevel::draw () {
 
 	JJ1BonusLevelPlayer *bonusPlayer;
+	unsigned char* row;
 	Sprite* sprite;
 	SDL_Rect dst;
+	fixed playerX, playerY, playerSin, playerCos;
+	fixed distance, fwdX, fwdY, nX, sideX, sideY;
+	int levelX, levelY;
 	int x, y;
+
 
 	// Draw the background
 
@@ -582,30 +601,31 @@ void JJ1BonusLevel::draw () {
 
 	// Draw the ground
 
-	fixed playerX = bonusPlayer->getX();
-	fixed playerY = bonusPlayer->getY();
-	fixed playerSin = fSin(direction);
-	fixed playerCos = fCos(direction);
+	playerX = bonusPlayer->getX();
+	playerY = bonusPlayer->getY();
+	playerSin = fSin(direction);
+	playerCos = fCos(direction);
 
 	if (SDL_MUSTLOCK(canvas)) SDL_LockSurface(canvas);
 
 	for (y = 1; y <= (canvasH >> 1) - 15; y++) {
 
-		fixed distance = DIV(ITOF(800), ITOF(92) - (ITOF(y * 84) / ((canvasH >> 1) - 16)));
-		fixed sideX = MUL(distance, playerCos);
-		fixed sideY = MUL(distance, playerSin);
-		fixed fwdX = playerX + MUL(distance - F16, playerSin) - (sideX >> 1);
-		fixed fwdY = playerY - MUL(distance - F16, playerCos) - (sideY >> 1);
+		distance = DIV(ITOF(800), ITOF(92) - (ITOF(y * 84) / ((canvasH >> 1) - 16)));
+		sideX = MUL(distance, playerCos);
+		sideY = MUL(distance, playerSin);
+		fwdX = playerX + MUL(distance - F16, playerSin) - (sideX >> 1);
+		fwdY = playerY - MUL(distance - F16, playerCos) - (sideY >> 1);
 
-		unsigned char* row = static_cast<unsigned char*>(canvas->pixels) + (canvas->pitch * (canvasH - y));
+		row = ((unsigned char *)(canvas->pixels)) + (canvas->pitch * (canvasH - y));
 
 		for (x = 0; x < canvasW; x++) {
 
-			fixed nX = ITOF(x) / canvasW;
-			int levelX = FTOI(fwdX + MUL(nX, sideX));
-			int levelY = FTOI(fwdY + MUL(nX, sideY));
+			nX = ITOF(x) / canvasW;
 
-			row[x] = static_cast<unsigned char*>(tileSet->pixels)
+			levelX = FTOI(fwdX + MUL(nX, sideX));
+			levelY = FTOI(fwdY + MUL(nX, sideY));
+
+			row[x] = ((unsigned char *)(tileSet->pixels))
 				[(grid[ITOT(levelY) & 255][ITOT(levelX) & 255].tile << 10) +
 					((levelY & 31) * tileSet->pitch) + (levelX & 31)];
 
@@ -678,7 +698,7 @@ void JJ1BonusLevel::draw () {
 
 				if (sprite) {
 
-					fixed nX = DIV(MUL(sX, playerCos) + MUL(sY, playerSin), divisor);
+					nX = DIV(MUL(sX, playerCos) + MUL(sY, playerSin), divisor);
 					dst.x = FTOI(nX * canvasW) + (canvasW >> 1);
 					dst.y = canvasH >> 1;
 					sprite->drawScaled(dst.x, dst.y, DIV(F64 * canvasW / SW, divisor));
@@ -712,6 +732,9 @@ void JJ1BonusLevel::draw () {
 	font->showNumber((x / 10) % 6, 274, 0);
 	font->showNumber(x % 10, 291, 0);
 
+
+	return;
+
 }
 
 
@@ -725,20 +748,26 @@ int JJ1BonusLevel::play () {
 	bool pmenu, pmessage;
 	int option;
 	unsigned int returnTime;
+	int ret;
+
 
 	tickOffset = globalTicks;
 	ticks = T_STEP;
 	steps = 0;
+
 	pmessage = pmenu = false;
 	option = 0;
+
 	returnTime = 0;
 
 	video.setPalette(palette);
 
 	while (true) {
 
-		int ret = loop(pmenu, option, pmessage);
+		ret = loop(pmenu, option, pmessage);
+
 		if (ret < 0) return ret;
+
 
 		// Check if level has been won
 		if (returnTime && (ticks > returnTime)) {
@@ -762,6 +791,7 @@ int JJ1BonusLevel::play () {
 
 			ret = step();
 			steps++;
+
 			if (ret < 0) return ret;
 			else if (ret) {
 
@@ -780,6 +810,7 @@ int JJ1BonusLevel::play () {
 
 		draw();
 
+
 		// If paused, draw "PAUSE"
 		if (pmessage && !pmenu)
 			font->showString("pause", (canvasW >> 1) - 44, 32);
@@ -793,3 +824,5 @@ int JJ1BonusLevel::play () {
 	return E_NONE;
 
 }
+
+

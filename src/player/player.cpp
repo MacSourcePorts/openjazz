@@ -47,6 +47,8 @@ Player::Player () {
 	levelPlayer = NULL;
 	name = NULL;
 
+	return;
+
 }
 
 
@@ -56,6 +58,8 @@ Player::Player () {
 Player::~Player () {
 
 	deinit();
+
+	return;
 
 }
 
@@ -108,6 +112,8 @@ void Player::init (Game* owner, char *playerName, unsigned char *playerCols, uns
 
 	}
 
+	return;
+
 }
 
 
@@ -121,6 +127,8 @@ void Player::deinit () {
 
 	if (name) delete[] name;
 	name = NULL;
+
+	return;
 
 }
 
@@ -137,6 +145,8 @@ void Player::clearAmmo () {
 	ammoType = -1;
 	fireSpeed = 0;
 
+	return;
+
 }
 
 
@@ -149,6 +159,8 @@ void Player::clearAmmo () {
 void Player::reset (int x, int y) {
 
 	levelPlayer->reset(x, y);
+
+	return;
 
 }
 
@@ -197,6 +209,8 @@ void Player::createLevelPlayer (LevelType levelType, Anim** anims,
 	}
 
 	for (count = 0; count < PCONTROLS; count++) pcontrols[count] = false;
+
+	return;
 
 }
 
@@ -283,6 +297,8 @@ void Player::setControl (int control, bool state) {
 
 	pcontrols[control] = state;
 
+	return;
+
 }
 
 
@@ -309,6 +325,8 @@ void Player::addScore (int addedScore) {
 
 	score += addedScore;
 
+	return;
+
 }
 
 
@@ -328,6 +346,8 @@ int Player::getScore () {
 void Player::addLife () {
 
 	if (lives < 99) lives++;
+
+	return;
 
 }
 
@@ -354,6 +374,8 @@ void Player::addAmmo (int type, int amount) {
 
 	if (!ammo[type]) ammoType = type;
 	ammo[type] += amount;
+
+	return;
 
 }
 
@@ -432,6 +454,8 @@ void Player::setCheckpoint (int gridX, int gridY) {
 
 	game->setCheckpoint(gridX, gridY);
 
+	return;
+
 }
 
 
@@ -480,6 +504,8 @@ void Player::send (unsigned char *buffer) {
 
 	if (levelPlayer) levelPlayer->send(buffer);
 
+	return;
+
 }
 
 
@@ -512,4 +538,7 @@ void Player::receive (unsigned char *buffer) {
 
 	if (levelPlayer) levelPlayer->receive(buffer);
 
+	return;
+
 }
+

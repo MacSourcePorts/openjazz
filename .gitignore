@@ -43,3 +43,6 @@ OpenJazz-*.zip
 # generated documentation
 /doc/html
 /res/unix/OpenJazz.6
+build-x86_64/*
+build-arm64/*
+release/*

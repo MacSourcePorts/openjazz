@@ -62,55 +62,49 @@
 class Controls {
 
 	private:
-		typedef struct {
+		struct {
 
 			int  key; ///< Keyboard key
 			bool pressed; ///< Whether or not the key is pressed
 
-		} Keys;
+		} keys[CONTROLS];
 
-		typedef struct {
+		struct {
 
 			int  button; ///< Joystick button
 			bool pressed; ///< Whether or not the button is pressed
 
-		} Buttons;
+		} buttons[CONTROLS];
 
-		typedef struct {
+		struct {
 
 			int  axis; ///< Joystick axis
 			bool direction; ///< Axis direction
 			bool pressed; ///< Whether or not the axis is pressed in the given direction
 
-		} Axes;
+		} axes[CONTROLS];
 
-		typedef struct {
+		struct {
 
 			int  hat; ///< Joystick hat
 			int  direction; ///< Hat direction
 			bool pressed; ///< Whether or not the hat is pressed in the given direction
 
-		} Hats;
+		} hats[CONTROLS];
 
-		typedef struct {
+		struct {
 
 			unsigned int time; ///< The time from which the control will respond to being pressed
 			bool         state; ///< Whether or not the control is being used
 
-		} ControlState;
+		} controls[CONTROLS];
 
-		Keys keys[CONTROLS];
-		Buttons buttons[CONTROLS];
-		Axes axes[CONTROLS];
-		Hats hats[CONTROLS];
-		ControlState controlstates[CONTROLS];
-
-		int cursorX; ///< X-coordinate of the cursor
-		int cursorY; ///< Y-coordinate of the cursor
-		bool cursorPressed; ///< Whether or not the cursor is being pressed
-		bool cursorReleased; ///< Whether or not the cursor has been released
-		int wheelUp; ///< How many times the wheel has been scrolled upwards
-		int wheelDown; ///< How many times the wheel has been scrolled downwards
+		int          cursorX; ///< X-coordinate of the cursor
+		int          cursorY; ///< Y-coordinate of the cursor
+		bool         cursorPressed; ///< Whether or not the cursor is being pressed
+		bool         cursorReleased; ///< Whether or not the cursor has been released
+		int          wheelUp; ///< How many times the wheel has been scrolled upwards
+		int          wheelDown; ///< How many times the wheel has been scrolled downwards
 
 		void setCursor (int x, int y, bool pressed);
 

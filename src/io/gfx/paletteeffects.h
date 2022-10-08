@@ -50,8 +50,8 @@ class PaletteEffect {
 		PaletteEffect* next; ///< Next effect to use
 
 	public:
-		explicit PaletteEffect(PaletteEffect* nextPE);
-		virtual ~PaletteEffect();
+		PaletteEffect          (PaletteEffect* nextPE);
+		virtual ~PaletteEffect ();
 
 		virtual void apply (SDL_Color* shownPalette, bool direct, int mspf, bool isStatic);
 

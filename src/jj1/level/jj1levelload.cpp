@@ -97,6 +97,7 @@ int JJ1Level::loadPanel () {
 	}
 
 	delete[] sorted;
+
 	delete[] pixels;
 
 	return E_NONE;
@@ -159,6 +160,9 @@ void JJ1Level::loadSprite (File* file, Sprite* sprite) {
 
 	}
 
+
+	return;
+
 }
 
 
@@ -175,6 +179,8 @@ int JJ1Level::loadSprites (char * fileName) {
 	File* specFile = NULL;
 	unsigned char* buffer;
 	int count;
+	bool loaded;
+
 
 	// Open fileName
 	try {
@@ -224,7 +230,7 @@ int JJ1Level::loadSprites (char * fileName) {
 	// Loop through all the sprites to be loaded
 	for (count = 0; count < sprites; count++) {
 
-		bool loaded = false;
+		loaded = false;
 
 		if (mainFile->loadChar() == 0xFF) {
 
@@ -301,6 +307,10 @@ int JJ1Level::loadSprites (char * fileName) {
 int JJ1Level::loadTiles (char* fileName) {
 
 	File* file;
+	unsigned char* buffer;
+	int rle, pos, index, count, fileSize;
+	int tiles;
+
 
 	try {
 
@@ -311,6 +321,7 @@ int JJ1Level::loadTiles (char* fileName) {
 		return e;
 
 	}
+
 
 	// Load the palette
 	file->loadPalette(palette);
@@ -323,32 +334,33 @@ int JJ1Level::loadTiles (char* fileName) {
 	// Skip the second, identical, background palette
 	file->skipRLE();
 
+
 	// Load the tile pixel indices
 
-	int tiles = 240; // Never more than 240 tiles
+	tiles = 240; // Never more than 240 tiles
 
-	unsigned char* buffer = new unsigned char[tiles << 10];
+	buffer = new unsigned char[tiles << 10];
 
 	file->seek(4, false);
 
-	int pos = 0;
-	int fileSize = file->getSize();
+	pos = 0;
+	fileSize = file->getSize();
 
 	// Read the RLE pixels
 	// file::loadRLE() cannot be used, for reasons that will become clear
 	while ((pos < (tiles << 10)) && (file->tell() < fileSize)) {
 
-		int rle = file->loadChar();
+		rle = file->loadChar();
 
 		if (rle & 128) {
 
-			int index = file->loadChar();
+			index = file->loadChar();
 
-			for (int i = 0; i < (rle & 127); i++) buffer[pos++] = index;
+			for (count = 0; count < (rle & 127); count++) buffer[pos++] = index;
 
 		} else if (rle) {
 
-			for (int i = 0; i < rle; i++)
+			for (count = 0; count < rle; count++)
 				buffer[pos++] = file->loadChar();
 
 		} else { // This happens at the end of each tile
@@ -374,7 +386,7 @@ int JJ1Level::loadTiles (char* fileName) {
 	tiles = pos >> 10;
 
 	tileSet = createSurface(buffer, TTOI(1), TTOI(tiles));
-	SDL_SetColorKey(tileSet, SDL_SRCCOLORKEY, TKEY);
+	enableColorKey(tileSet, TKEY);
 
 	delete[] buffer;
 
@@ -700,8 +712,8 @@ int JJ1Level::load (char* fileName, bool checkpoint) {
 
 		for (count = 0; count < path[type].length; count++) {
 
-			path[type].x[count] = reinterpret_cast<signed char*>(buffer)[(type << 9) + (count << 1) + 3] << 2;
-			path[type].y[count] = reinterpret_cast<signed char*>(buffer)[(type << 9) + (count << 1) + 2];
+			path[type].x[count] = ((signed char *)buffer)[(type << 9) + (count << 1) + 3] << 2;
+			path[type].y[count] = ((signed char *)buffer)[(type << 9) + (count << 1) + 2];
 
 		}
 
@@ -887,7 +899,7 @@ int JJ1Level::load (char* fileName, bool checkpoint) {
 		string[0] = MTL_P_ANIMS + JJ1PANIMS;
 		string[1] = MT_P_ANIMS;
 		string[2] = 0;
-		game->send(reinterpret_cast<unsigned char*>(string));
+		game->send((unsigned char *)string);
 
 	}
 
@@ -1050,3 +1062,5 @@ int JJ1Level::load (char* fileName, bool checkpoint) {
 	return E_NONE;
 
 }
+
+

@@ -49,6 +49,8 @@ JJ1Bird::JJ1Bird (JJ1Bird* birds, JJ1LevelPlayer *rescuer, unsigned char gX, uns
 	fleeing = false;
 	fireTime = 0;
 
+	return;
+
 }
 
 
@@ -58,6 +60,8 @@ JJ1Bird::JJ1Bird (JJ1Bird* birds, JJ1LevelPlayer *rescuer, unsigned char gX, uns
 JJ1Bird::~JJ1Bird () {
 
 	if (next) delete next;
+
+	return;
 
 }
 
@@ -98,6 +102,8 @@ JJ1LevelPlayer * JJ1Bird::getPlayer () {
 void JJ1Bird::hit () {
 
 	fleeing = true;
+
+	return;
 
 }
 
@@ -156,6 +162,7 @@ JJ1Bird* JJ1Bird::step (unsigned int ticks) {
 
 	Movable* leader;
 	JJ1Event* event;
+	bool target;
 
 	// Process the next bird
 	if (next) next = next->step(ticks);
@@ -235,7 +242,7 @@ JJ1Bird* JJ1Bird::step (unsigned int ticks) {
 
 			// Check for nearby targets
 
-			bool target = false;
+			target = false;
 			event = level->getEvents();
 
 			if (player->getFacing()) {
@@ -306,4 +313,8 @@ void JJ1Bird::draw (unsigned int ticks, int change) {
 
 	anim->draw(getDrawX(change), getDrawY(change));
 
+	return;
+
 }
+
+

@@ -61,7 +61,7 @@
 		#include <fcntl.h>
 		#include <malloc.h>
 		static u32* socBuffer = NULL;
-		#define SOC_BUFFERSIZE 0x100000 // maybe 0x80000 is enough
+		#define SOC_BUFFERSIZE 0x100000
 	#endif
 #elif defined(WII)
 	#include <network.h>
@@ -82,7 +82,7 @@ Network::Network () {
 	// Start Windows Sockets
 	WSAStartup(MAKEWORD(1, 0), &WSAData);
 	#elif defined(_3DS)
-	socBuffer = static_cast<u32*>(memalign(0x1000, SOC_BUFFERSIZE));
+	socBuffer = (u32*)memalign(0x1000, SOC_BUFFERSIZE);
 	socInit(socBuffer, SOC_BUFFERSIZE);
 	#endif
 #elif defined USE_SDL_NET
@@ -94,6 +94,8 @@ Network::Network () {
 #  endif
 	SDLNet_Init();
 #endif
+
+	return;
 
 }
 
@@ -118,6 +120,8 @@ Network::~Network () {
 #  endif
 #endif
 
+	return;
+
 }
 
 
@@ -130,16 +134,19 @@ int Network::host () {
 
 #ifdef USE_SOCKETS
 	sockaddr_in sockAddr;
-	int sock = socket(AF_INET, SOCK_STREAM, 0);
+	int sock, nonblock;
+
+
+	sock = socket(AF_INET, SOCK_STREAM, 0);
 
 	if (sock == -1) return E_N_SOCKET;
 
 
 	// Make the socket non-blocking
+	nonblock = 1;
 #ifdef _3DS
 	fcntl(sock, F_SETFL, fcntl(sock, F_GETFL, 0) | O_NONBLOCK);
 #else
-	int nonblock = 1;
 	ioctl(sock, FIONBIO, (u_long *)&nonblock);
 #endif
 
@@ -361,6 +368,8 @@ void Network::close (int sock) {
 	SDLNet_TCP_Close((TCPsocket)sock);
 #endif
 
+	return;
+
 }
 
 
@@ -375,9 +384,9 @@ void Network::close (int sock) {
 int Network::send (int sock, unsigned char *buffer) {
 
 #ifdef USE_SOCKETS
-	return ::send(sock, reinterpret_cast<char*>(buffer), buffer[0], MSG_NOSIGNAL);
+	return ::send(sock, (char *)buffer, buffer[0], MSG_NOSIGNAL);
 #elif defined USE_SDL_NET
-	return SDLNet_TCP_Send((TCPsocket)sock, reinterpret_cast<char*>(buffer), buffer[0]);
+	return SDLNet_TCP_Send((TCPsocket)sock, (char *)buffer, buffer[0]);
 #else
 	return 0;
 #endif
@@ -397,7 +406,7 @@ int Network::send (int sock, unsigned char *buffer) {
 int Network::recv (int sock, unsigned char *buffer, int length) {
 
 #ifdef USE_SOCKETS
-	return ::recv(sock, reinterpret_cast<char*>(buffer), length, MSG_NOSIGNAL);
+	return ::recv(sock, (char *)buffer, length, MSG_NOSIGNAL);
 #elif defined USE_SDL_NET
 	return SDLNet_TCP_Recv((TCPsocket)sock, buffer, length);
 #else

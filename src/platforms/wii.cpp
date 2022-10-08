@@ -18,8 +18,6 @@
 #include <gccore.h>
 #include <ogc/usbgecko.h>
 #include <sys/iosupport.h>
-#include <unistd.h>
-#include <fat.h>
 
 /* USBGecko Debugging */
 
@@ -49,13 +47,7 @@ const devoptab_t dotab_geckoout = {
 	NULL, NULL, NULL
 };
 
-void Wii_Init() {
-
-	// enable file system
-
-	fatInitDefault();
-
-	// set console
+void Wii_SetConsole() {
 
 	LWP_MutexInit(&usbgecko_mutex, false);
 	usbgecko = usb_isgeckoalive(SLOT);

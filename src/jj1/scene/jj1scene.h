@@ -155,7 +155,7 @@ class JJ1SceneImage {
 		SDL_Surface* image;
 		int id;
 
-		explicit JJ1SceneImage (JJ1SceneImage* newNext);
+		JJ1SceneImage  (JJ1SceneImage* newNext);
 		~JJ1SceneImage ();
 
 };
@@ -168,7 +168,7 @@ class JJ1ScenePalette {
 		SDL_Color palette[256];
 		int id;
 
-		explicit JJ1ScenePalette (JJ1ScenePalette* newNext);
+		JJ1ScenePalette  (JJ1ScenePalette* newNext);
 		~JJ1ScenePalette ();
 
 };
@@ -211,7 +211,7 @@ class JJ1SceneAnimation {
 		int frames;
 		int reverseAnimation;
 
-		explicit JJ1SceneAnimation (JJ1SceneAnimation* newNext);
+		JJ1SceneAnimation  (JJ1SceneAnimation* newNext);
 		~JJ1SceneAnimation ();
 
 		void addFrame (int frameType, unsigned char* frameData, int frameSize);
@@ -235,9 +235,6 @@ class JJ1Scene {
 		/// Scripts all information needed to render script pages, text etc
 		JJ1ScenePage*      pages;
 
-		JJ1Scene(const JJ1Scene&); // non construction-copyable
-		JJ1Scene& operator=(const JJ1Scene&); // non copyable
-
 		void               loadScripts      (File* f);
 		void               loadData         (File* f);
 		void               loadAni          (File* f, int dataIndex);
@@ -246,7 +243,7 @@ class JJ1Scene {
 		unsigned short int loadShortMem     (unsigned char **data);
 
 	public:
-		explicit JJ1Scene (const char* fileName);
+		JJ1Scene  (const char* fileName);
 		~JJ1Scene ();
 
 		int play ();

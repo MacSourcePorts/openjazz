@@ -19,11 +19,7 @@
 
 // OpenJazz modification
 #ifndef restrict
-#  if (defined(_WIN32) && defined(_MSC_VER)) || defined(__GNUC__)
-#    define restrict __restrict
-#  else
-#    define restrict // ignore
-#  endif
+#define restrict
 #endif
 
 typedef unsigned char scale3x_uint8;

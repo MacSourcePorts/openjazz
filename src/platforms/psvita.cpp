@@ -20,9 +20,7 @@
 #include <psp2/touch.h>
 #include <kbdvita.h>
 
-void PSVITA_Init() {
-
-	// controls
+void PSVITA_InitControls() {
 
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);

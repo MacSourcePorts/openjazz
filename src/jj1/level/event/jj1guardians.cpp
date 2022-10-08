@@ -48,6 +48,8 @@ Guardian::Guardian(unsigned char gX, unsigned char gY) : JJ1Event(gX, gY) {
 
 	stage = 0;
 
+	return;
+
 }
 
 
@@ -58,6 +60,8 @@ Guardian::Guardian(unsigned char gX, unsigned char gY) : JJ1Event(gX, gY) {
  * @param gY Y-coordinate
  */
 DeckGuardian::DeckGuardian (unsigned char gX, unsigned char gY) : Guardian(gX, gY) {
+
+	return;
 
 }
 
@@ -71,15 +75,21 @@ DeckGuardian::DeckGuardian (unsigned char gX, unsigned char gY) : Guardian(gX, g
  */
 JJ1Event* DeckGuardian::step (unsigned int ticks) {
 
+	int count;
+
+
 	set = prepareStep(ticks);
+
 	if (!set) return remove(false);
 
-	int count = level->getEventHits(gridX, gridY);
+
+	count = level->getEventHits(gridX, gridY);
 
 	if (count < 8) stage = 0;
 	else if (count < 16) stage = 1;
 	else if (count < 24) stage = 2;
 	else stage = 3;
+
 
 	// If the event has been destroyed, play its finishing animation and set its
 	// reaction time
@@ -90,6 +100,7 @@ JJ1Event* DeckGuardian::step (unsigned int ticks) {
 		destroy(ticks);
 
 	}
+
 
 	// If the reaction time has expired
 	if (level->getEventTime(gridX, gridY) &&
@@ -102,6 +113,7 @@ JJ1Event* DeckGuardian::step (unsigned int ticks) {
 		}
 
 	}
+
 
 	return this;
 
@@ -116,10 +128,15 @@ JJ1Event* DeckGuardian::step (unsigned int ticks) {
  */
 void DeckGuardian::draw (unsigned int ticks, int change) {
 
+	Anim* unitAnim;
+
+
 	if (next) next->draw(ticks, change);
+
 
 	// If the event has been removed from the grid, do not show it
 	if (!set) return;
+
 
 	// Draw the boss
 
@@ -127,7 +144,7 @@ void DeckGuardian::draw (unsigned int ticks, int change) {
 
 		// Draw unit
 
-		Anim* unitAnim = level->getAnim(29 + stage);
+		unitAnim = level->getAnim(29 + stage);
 
 		if (stage == 0) {
 
@@ -159,6 +176,9 @@ void DeckGuardian::draw (unsigned int ticks, int change) {
 
 	}
 
+
+	return;
+
 }
 
 
@@ -172,6 +192,8 @@ MedGuardian::MedGuardian(unsigned char gX, unsigned char gY) : Guardian(gX, gY) 
 
 	direction = 1;
 	shoot = false;
+
+	return;
 
 }
 
@@ -426,4 +448,8 @@ void MedGuardian::draw(unsigned int ticks, int change) {
 
 	if (ticks < flashTime) stageAnim->restorePalette();
 
+
+	return;
+
 }
+

@@ -120,8 +120,8 @@ class Level {
 		int  loop          (bool& menu, int& option, bool& message);
 
 	public:
-		explicit Level(Game* owner);
-		virtual ~Level();
+		Level          (Game* owner);
+		virtual ~Level ();
 
 		void         addTimer (int seconds);
 		LevelStage   getStage ();

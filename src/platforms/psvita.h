@@ -17,7 +17,7 @@
 
 #ifdef __vita__
 
-void PSVITA_Init();
+void PSVITA_InitControls();
 
 int PSVITA_InputString(const char* hint, char*& current_string, char*& new_string);
 

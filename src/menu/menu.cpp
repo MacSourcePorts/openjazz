@@ -51,6 +51,8 @@ void Menu::showEscString () {
 
 	fontbig->showString(ESCAPE_STRING, 3, canvasH - 12);
 
+	return;
+
 }
 
 
@@ -213,18 +215,19 @@ int Menu::textInput (const char* request, char*& text, bool ip) {
 
 #else
 
-	int count, terminate, added, x, y;
+	int count, terminate, character, added, x, y;
+	unsigned int cursor;
 
 	video.setPalette(menuPalette);
 
 	// Create input string
 	input = createEditableString(text);
 
-	unsigned int cursor = strlen(input);
+	cursor = strlen(input);
 
 	while (true) {
 
-		int character = loop(TYPING_LOOP);
+		character = loop(TYPING_LOOP);
 
 		if (character == E_QUIT) {
 

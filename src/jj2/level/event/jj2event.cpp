@@ -55,6 +55,8 @@ JJ2Event::JJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned char newTy
 
 	flipped = false;
 
+	return;
+
 }
 
 
@@ -64,6 +66,8 @@ JJ2Event::JJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned char newTy
 JJ2Event::~JJ2Event () {
 
 	if (next) delete next;
+
+	return;
 
 }
 
@@ -83,6 +87,8 @@ PickupJJ2Event::PickupJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigne
 	floating = true;
 	animSet = TSF? 71: 67;
 
+	return;
+
 }
 
 
@@ -90,6 +96,8 @@ PickupJJ2Event::PickupJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigne
  * Delete pickup event
  */
 PickupJJ2Event::~PickupJJ2Event () {
+
+	return;
 
 }
 
@@ -105,6 +113,8 @@ PickupJJ2Event::~PickupJJ2Event () {
  */
 AmmoJJ2Event::AmmoJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned char newType, bool TSF) : PickupJJ2Event(newNext, gridX, gridY, newType, TSF, 0) {
 
+	return;
+
 }
 
 
@@ -112,6 +122,8 @@ AmmoJJ2Event::AmmoJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned ch
  * Delete ammo pickup event
  */
 AmmoJJ2Event::~AmmoJJ2Event () {
+
+	return;
 
 }
 
@@ -127,6 +139,8 @@ AmmoJJ2Event::~AmmoJJ2Event () {
  */
 CoinGemJJ2Event::CoinGemJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned char newType, bool TSF) : PickupJJ2Event(newNext, gridX, gridY, newType, TSF, 0) {
 
+	return;
+
 }
 
 
@@ -134,6 +148,8 @@ CoinGemJJ2Event::CoinGemJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsig
  * Delete coin/gem pickup event
  */
 CoinGemJJ2Event::~CoinGemJJ2Event () {
+
+	return;
 
 }
 
@@ -149,6 +165,8 @@ CoinGemJJ2Event::~CoinGemJJ2Event () {
  */
 FoodJJ2Event::FoodJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned char newType, bool TSF) : PickupJJ2Event(newNext, gridX, gridY, newType, TSF, 0) {
 
+	return;
+
 }
 
 
@@ -156,6 +174,8 @@ FoodJJ2Event::FoodJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned ch
  * Delete food pickup event
  */
 FoodJJ2Event::~FoodJJ2Event () {
+
+	return;
 
 }
 
@@ -174,6 +194,8 @@ SpringJJ2Event::SpringJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigne
 
 	animSet = TSF? 96: 92;
 
+	return;
+
 }
 
 
@@ -181,6 +203,8 @@ SpringJJ2Event::SpringJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigne
  * Delete spring event
  */
 SpringJJ2Event::~SpringJJ2Event () {
+
+	return;
 
 }
 
@@ -199,6 +223,8 @@ OtherJJ2Event::OtherJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned 
 
 	animSet = TSF? 71: 67;
 
+	return;
+
 }
 
 
@@ -206,6 +232,8 @@ OtherJJ2Event::OtherJJ2Event (JJ2Event* newNext, int gridX, int gridY, unsigned 
  * Delete placeholder event
  */
 OtherJJ2Event::~OtherJJ2Event () {
+
+	return;
 
 }
 
@@ -218,6 +246,8 @@ OtherJJ2Event::~OtherJJ2Event () {
 void JJ2Event::destroy (unsigned int ticks) {
 
 	endTime = ticks + 500;
+
+	return;
 
 }
 
@@ -250,3 +280,4 @@ JJ2Event* JJ2Event::remove () {
 	return oldNext;
 
 }
+

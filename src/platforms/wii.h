@@ -17,7 +17,7 @@
 
 #ifdef WII
 
-void Wii_Init();
+void Wii_SetConsole();
 
 #endif
 

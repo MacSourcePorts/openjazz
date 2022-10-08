@@ -156,9 +156,6 @@ class JJ1LevelPlayer : public LevelPlayer {
 		int               items; ///< Number of items collected
 		bool              gem; ///< Bonus level gem collected
 
-		JJ1LevelPlayer(const JJ1LevelPlayer&); // non construction-copyable
-		JJ1LevelPlayer& operator=(const JJ1LevelPlayer&); // non copyable
-
 		bool checkMaskDown (fixed yOffset);
 		bool checkMaskUp   (fixed yOffset);
 

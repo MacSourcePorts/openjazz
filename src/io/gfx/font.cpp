@@ -39,7 +39,7 @@ Font::Font (const char* fileName) {
 	unsigned char* pixels;
 	unsigned char* blank;
 	int fileSize;
-	int count, width, height;
+	int count, size, width, height;
 
 	// Load font from a font file
 
@@ -49,7 +49,7 @@ Font::Font (const char* fileName) {
 
 	} catch (int e) {
 
-		throw;
+		throw e;
 
 	}
 
@@ -80,7 +80,7 @@ Font::Font (const char* fileName) {
 
 		}
 
-		int size = file->loadShort();
+		size = file->loadShort();
 
 		if (size > 4) {
 
@@ -100,7 +100,7 @@ Font::Font (const char* fileName) {
 
 		} else characters[count] = createSurface(blank, 3, 1);
 
-		SDL_SetColorKey(characters[count], SDL_SRCCOLORKEY, 0);
+		enableColorKey(characters[count], 0);
 
 	}
 
@@ -146,6 +146,8 @@ Font::Font (const char* fileName) {
 
 	}
 
+	return;
+
 }
 
 
@@ -172,7 +174,7 @@ Font::Font (unsigned char* pixels, bool big) {
 
 		characters[count] = createSurface(chrPixels, 8, lineHeight);
 
-		if (big) SDL_SetColorKey(characters[count], SDL_SRCCOLORKEY, 31);
+		if (big) enableColorKey(characters[count], 31);
 
 	}
 
@@ -210,6 +212,8 @@ Font::Font (unsigned char* pixels, bool big) {
 
 	}
 
+	return;
+
 }
 
 
@@ -223,7 +227,7 @@ Font::Font (bool bonus) {
 	File* file;
 	unsigned char* pixels;
 	int fileSize;
-	int count;
+	int count, width, height;
 
 	// Load font from FONTS.000 or BONUS.000
 
@@ -233,7 +237,7 @@ Font::Font (bool bonus) {
 
 	} catch (int e) {
 
-		throw;
+		throw e;
 
 	}
 
@@ -253,7 +257,7 @@ Font::Font (bool bonus) {
 
 			file->seek(4, false);
 
-			int width = file->loadShort();
+			width = file->loadShort();
 			if (width == 0xFFFF) width = 0;
 
 			file->seek((width << 2) + file->loadShort(), false);
@@ -274,8 +278,8 @@ Font::Font (bool bonus) {
 
 		}
 
-		int width = file->loadShort(SW);
-		int height = file->loadShort(SH);
+		width = file->loadShort(SW);
+		height = file->loadShort(SH);
 
 		if (bonus) width = (width + 3) & ~3;
 		else width <<= 2;
@@ -285,7 +289,7 @@ Font::Font (bool bonus) {
 		pixels = file->loadPixels(width * height);
 
 		characters[count] = createSurface(pixels, width, height);
-		SDL_SetColorKey(characters[count], SDL_SRCCOLORKEY, 254);
+		enableColorKey(characters[count], 254);
 
 		delete[] pixels;
 
@@ -301,7 +305,7 @@ Font::Font (bool bonus) {
 	pixels = new unsigned char[3];
 	memset(pixels, 254, 3);
 	characters[nCharacters] = createSurface(pixels, 3, 1);
-	SDL_SetColorKey(characters[nCharacters], SDL_SRCCOLORKEY, 254);
+	enableColorKey(characters[nCharacters], 254);
 	delete[] pixels;
 
 
@@ -341,6 +345,8 @@ Font::Font (bool bonus) {
 
 	}
 
+	return;
+
 }
 
 
@@ -349,7 +355,11 @@ Font::Font (bool bonus) {
  */
 Font::~Font () {
 
-	for (int i = 0; i < nCharacters; i++) SDL_FreeSurface(characters[i]);
+	int count;
+
+	for (count = 0; count < nCharacters; count++) SDL_FreeSurface(characters[count]);
+
+	return;
 
 }
 
@@ -520,6 +530,8 @@ void Font::showNumber (int n, int x, int y) {
 
 	}
 
+	return;
+
 }
 
 
@@ -541,7 +553,9 @@ void Font::mapPalette (int start, int length, int newStart, int newLength) {
 			(count * newLength / length) + newStart;
 
 	for (count = 0; count < nCharacters; count++)
-		SDL_SetPalette(characters[count], SDL_LOGPAL, palette, start, length);
+		setLogicalPalette(characters[count], palette, start, length);
+
+	return;
 
 }
 
@@ -555,6 +569,8 @@ void Font::restorePalette () {
 
 	for (count = 0; count < nCharacters; count++)
 		video.restoreSurfacePalette(characters[count]);
+
+	return;
 
 }
 
@@ -621,3 +637,5 @@ int Font::getSceneStringWidth (const unsigned char *string) {
 	return stringWidth;
 
 }
+
+

@@ -14,8 +14,8 @@ ifeq ($(OS),Windows_NT)
 endif
 
 # SDL
-CXXFLAGS += $(shell sdl-config --cflags)
-LIBS += $(shell sdl-config --libs)
+CXXFLAGS += $(shell $(PREFIX)/sdl2-config --cflags)
+LIBS += $(shell $(PREFIX)/sdl2-config --libs)
 
 LIBS += -lm
 
@@ -23,11 +23,15 @@ LIBS += -lm
 
 OpenJazz: $(OBJS)
 	@-echo [LD] $@
-	@$(CXX) -o OpenJazz $(LDFLAGS) $(OBJS) $(LIBS)
+	@$(CXX) -arch $(ARCH) -o OpenJazz $(LDFLAGS) $(OBJS) $(LIBS)
+
+%.o: %.m
+	@-echo [CXX] $<
+	@$(CXX) -arch $(ARCH) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 %.o: %.cpp
 	@-echo [CXX] $<
-	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	@$(CXX) -arch $(ARCH) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	@-echo Cleaning...

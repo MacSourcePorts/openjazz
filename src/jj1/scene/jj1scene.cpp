@@ -104,9 +104,10 @@ JJ1SceneAnimation::JJ1SceneAnimation  (JJ1SceneAnimation* newNext) {
 
 	next = newNext;
 	background = NULL;
-	lastFrame = sceneFrames = NULL;
-	frames = reverseAnimation = 0;
-	id = -1;
+	lastFrame = NULL;
+	sceneFrames = NULL;
+	frames = 0;
+	reverseAnimation = 0;
 
 }
 
@@ -144,7 +145,6 @@ JJ1SceneImage::JJ1SceneImage (JJ1SceneImage *newNext) {
 
 	next = newNext;
 	image = NULL;
-	id = -1;
 
 }
 
@@ -155,6 +155,7 @@ JJ1SceneImage::JJ1SceneImage (JJ1SceneImage *newNext) {
 JJ1SceneImage::~JJ1SceneImage () {
 
 	if (next) delete next;
+
 	if (image) SDL_FreeSurface(image);
 
 }
@@ -168,7 +169,6 @@ JJ1SceneImage::~JJ1SceneImage () {
 JJ1ScenePalette::JJ1ScenePalette (JJ1ScenePalette *newNext) {
 
 	next = newNext;
-	id = -1;
 
 }
 
@@ -188,15 +188,13 @@ JJ1ScenePalette::~JJ1ScenePalette () {
  */
 JJ1SceneText::JJ1SceneText() {
 
-	x = -1;
-	y = -1;
-	textRect.x = -1;
-	textRect.y = -1;
-	extraLineHeight = -1;
-	text = NULL;
-	shadowColour = 0;
-	alignment = 0;
-	fontId = -1;
+		x = -1;
+		y = -1;
+		textRect.x = -1;
+		textRect.y = -1;
+		extraLineHeight = -1;
+		text = NULL;
+		shadowColour = 0;
 
 }
 
@@ -224,11 +222,7 @@ JJ1ScenePage::JJ1ScenePage() {
 	askForYesNo = 0;
 	stopMusic = 0;
 	animIndex = -1; // no anim
-	animLoops = 0;
-	animSpeed = 0;
-	nextPageAfterAnim = 0;
 	backgroundFade = 255;
-
 }
 
 
@@ -250,6 +244,8 @@ JJ1ScenePage::~JJ1ScenePage() {
 JJ1Scene::JJ1Scene (const char * fileName) {
 
 	File *file;
+	int loop;
+
 	nFonts = 0;
 	LOG_TRACE("Scene: %s", fileName);
 
@@ -259,7 +255,7 @@ JJ1Scene::JJ1Scene (const char * fileName) {
 
 	} catch (int e) {
 
-		throw;
+		throw e;
 
 	}
 
@@ -276,10 +272,10 @@ JJ1Scene::JJ1Scene (const char * fileName) {
 
 	LOG_TRACE("Scene: Script items: %d", scriptItems);
 
-	for (int i = 0; i < scriptItems; i++) {
+	for (loop = 0; loop < scriptItems; loop++) {
 
-		scriptStarts[i] = file->loadInt();// Load offset to script
-		LOG_TRACE("scriptStart: %ld", scriptStarts[i]);
+		scriptStarts[loop] = file->loadInt();// Load offset to script
+		LOG_TRACE("scriptStart: %ld", scriptStarts[loop]);
 
 	}
 
@@ -289,10 +285,10 @@ JJ1Scene::JJ1Scene (const char * fileName) {
 	LOG_TRACE("Scene: Data items %d", dataItems);
 	dataOffsets = new signed long int[dataItems];
 
-	for (int i = 0; i < dataItems; i++) {
+	for (loop = 0; loop < dataItems; loop++) {
 
-		dataOffsets[i] = file->loadInt();// Load offset to script
-		LOG_TRACE("dataOffsets: %ld", dataOffsets[i]);
+		dataOffsets[loop] = file->loadInt();// Load offset to script
+		LOG_TRACE("dataOffsets: %ld", dataOffsets[loop]);
 
 	}
 
@@ -302,6 +298,8 @@ JJ1Scene::JJ1Scene (const char * fileName) {
 	delete[] scriptStarts;
 	delete[] dataOffsets;
 	delete file;
+
+	return;
 
 }
 
@@ -492,13 +490,13 @@ int JJ1Scene::play () {
 
 					case ESquareAniHeader:
 
-						loadCompactedMem(currentFrame->frameSize, currentFrame->frameData, static_cast<unsigned char*>(animation->background->pixels));
+						loadCompactedMem(currentFrame->frameSize, currentFrame->frameData, (unsigned char*)animation->background->pixels);
 
 						break;
 
 					case EFFAniHeader:
 
-						loadFFMem(currentFrame->frameSize, currentFrame->frameData, static_cast<unsigned char*>(animation->background->pixels));
+						loadFFMem(currentFrame->frameSize, currentFrame->frameData, (unsigned char*)animation->background->pixels);
 
 						break;
 
@@ -626,3 +624,5 @@ int JJ1Scene::play () {
 	return E_NONE;
 
 }
+
+

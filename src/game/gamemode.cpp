@@ -97,6 +97,8 @@ bool GameMode::endOfLevel (Game* game, Player *player, int gridX, int gridY) {
  */
 void GameMode::outOfTime () {
 
+	return;
+
 }
 
 
@@ -133,6 +135,8 @@ void SingleGameMode::drawScore (Font* font) {
 
 	(void)font;
 
+	return;
+
 }
 
 
@@ -160,6 +164,8 @@ void CooperativeGameMode::drawScore (Font* font) {
 	(void)font;
 
 	// Do nothing
+
+	return;
 
 }
 
@@ -199,6 +205,8 @@ unsigned char FreeForAllGameMode::chooseTeam () {
 void FreeForAllGameMode::drawScore (Font* font) {
 
 	font->showNumber(localPlayer->teamScore, 64, 4);
+
+	return;
 
 }
 
@@ -242,6 +250,8 @@ unsigned char TeamGameMode::chooseTeam () {
 void TeamGameMode::drawScore (Font* font) {
 
 	font->showNumber(localPlayer->teamScore, 64, 4);
+
+	return;
 
 }
 
@@ -334,3 +344,4 @@ bool RaceGameMode::endOfLevel (Game* game, Player *player, int gridX, int gridY)
 	return false;
 
 }
+

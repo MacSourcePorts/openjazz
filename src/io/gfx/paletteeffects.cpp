@@ -41,6 +41,8 @@ PaletteEffect::PaletteEffect (PaletteEffect* nextPE) {
 
 	next = nextPE;
 
+	return;
+
 }
 
 
@@ -50,6 +52,8 @@ PaletteEffect::PaletteEffect (PaletteEffect* nextPE) {
 PaletteEffect::~PaletteEffect () {
 
 	if (next) delete next;
+
+	return;
 
 }
 
@@ -67,6 +71,8 @@ void PaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, bool 
 	// Apply the next palette effect
 	if (next) next->apply(shownPalette, direct, mspf, isStatic);
 
+	return;
+
 }
 
 
@@ -81,6 +87,8 @@ WhiteInPaletteEffect::WhiteInPaletteEffect
 
 	duration = newDuration;
 	whiteness = F1 + FH;
+
+	return;
 
 }
 
@@ -125,6 +133,8 @@ void WhiteInPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf
 
 	if (direct) video.changePalette(shownPalette, 0, 256);
 
+	return;
+
 }
 
 
@@ -139,6 +149,8 @@ FadeInPaletteEffect::FadeInPaletteEffect
 
 	duration = newDuration;
 	blackness = F1 + FH;
+
+	return;
 
 }
 
@@ -184,6 +196,8 @@ void FadeInPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf,
 
 	if (direct) video.changePalette(shownPalette, 0, 256);
 
+	return;
+
 }
 
 
@@ -199,6 +213,8 @@ WhiteOutPaletteEffect::WhiteOutPaletteEffect
 	duration = newDuration;
 	whiteness = 0;
 
+	return;
+
 }
 
 
@@ -212,6 +228,8 @@ WhiteOutPaletteEffect::WhiteOutPaletteEffect
  */
 void WhiteOutPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, bool isStatic) {
 
+	int count;
+
 	// Apply the next palette effect
 	if (next) next->apply(shownPalette, direct, mspf, isStatic);
 
@@ -224,14 +242,14 @@ void WhiteOutPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int msp
 
 		if (whiteness > 0) {
 
-			for (int i = 0; i < 256; i++) {
+			for (count = 0; count < 256; count++) {
 
-				shownPalette[i].r = 255 -
-					FTOI((255 - shownPalette[i].r) * (F1 - whiteness));
-				shownPalette[i].g = 255 -
-					FTOI((255 - shownPalette[i].g) * (F1 - whiteness));
-				shownPalette[i].b = 255 -
-					FTOI((255 - shownPalette[i].b) * (F1 - whiteness));
+				shownPalette[count].r = 255 -
+					FTOI((255 - shownPalette[count].r) * (F1 - whiteness));
+				shownPalette[count].g = 255 -
+					FTOI((255 - shownPalette[count].g) * (F1 - whiteness));
+				shownPalette[count].b = 255 -
+					FTOI((255 - shownPalette[count].b) * (F1 - whiteness));
 
 			}
 		}
@@ -241,6 +259,8 @@ void WhiteOutPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int msp
 	}
 
 	if (direct) video.changePalette(shownPalette, 0, 256);
+
+	return;
 
 }
 
@@ -257,6 +277,8 @@ FadeOutPaletteEffect::FadeOutPaletteEffect
 	duration = newDuration;
 	blackness = -(F2 + F1);
 
+	return;
+
 }
 
 
@@ -270,6 +292,8 @@ FadeOutPaletteEffect::FadeOutPaletteEffect
  */
 void FadeOutPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, bool isStatic) {
 
+	int count;
+
 	// Apply the next palette effect
 	if (next) next->apply(shownPalette, direct, mspf, isStatic);
 
@@ -281,11 +305,14 @@ void FadeOutPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf
 
 		if (blackness > 0) {
 
-			for (int i = 0; i < 256; i++) {
+			for (count = 0; count < 256; count++) {
 
-				shownPalette[i].r = FTOI(shownPalette[i].r * (F1 - blackness));
-				shownPalette[i].g = FTOI(shownPalette[i].g * (F1 - blackness));
-				shownPalette[i].b = FTOI(shownPalette[i].b * (F1 - blackness));
+				shownPalette[count].r =
+					FTOI(shownPalette[count].r * (F1 - blackness));
+				shownPalette[count].g =
+					FTOI(shownPalette[count].g * (F1 - blackness));
+				shownPalette[count].b =
+					FTOI(shownPalette[count].b * (F1 - blackness));
 
 			}
 
@@ -296,6 +323,8 @@ void FadeOutPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf
 	}
 
 	if (direct) video.changePalette(shownPalette, 0, 256);
+
+	return;
 
 }
 
@@ -319,6 +348,8 @@ FlashPaletteEffect::FlashPaletteEffect
 	red = newRed;
 	green = newGreen;
 	blue = newBlue;
+
+	return;
 
 }
 
@@ -372,6 +403,8 @@ void FlashPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, 
 
 	if (direct) video.changePalette(shownPalette, 0, 256);
 
+	return;
+
 }
 
 
@@ -391,6 +424,8 @@ RotatePaletteEffect::RotatePaletteEffect
 	amount = newAmount;
 	speed = newSpeed;
 	position = 0;
+
+	return;
 
 }
 
@@ -430,6 +465,8 @@ void RotatePaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf,
 
 	if (direct) video.changePalette(shownPalette + first, first, amount);
 
+	return;
+
 }
 
 
@@ -451,6 +488,8 @@ SkyPaletteEffect::SkyPaletteEffect
 	first = newFirst;
 	amount = newAmount;
 	speed = newSpeed;
+
+	return;
 
 }
 
@@ -505,6 +544,8 @@ void SkyPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, bo
 
 	}
 
+	return;
+
 }
 
 
@@ -523,6 +564,8 @@ P2DPaletteEffect::P2DPaletteEffect
 	first = newFirst;
 	amount = newAmount;
 	speed = newSpeed;
+
+	return;
 
 }
 
@@ -561,6 +604,8 @@ void P2DPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, bo
 
 	if (direct) video.changePalette(shownPalette + first, first, amount);
 
+	return;
+
 }
 
 
@@ -580,6 +625,8 @@ P1DPaletteEffect::P1DPaletteEffect
 	amount = newAmount;
 	speed = newSpeed;
 
+	return;
+
 }
 
 
@@ -595,6 +642,7 @@ void P1DPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, bo
 
 	SDL_Color* currentPalette;
 	fixed position;
+	int count;
 
 	// Apply the next palette effect
 	if (next) next->apply(shownPalette, direct, mspf, isStatic);
@@ -602,16 +650,18 @@ void P1DPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, bo
 	currentPalette = video.getPalette();
 	position = viewX + viewY;
 
-	for (int i = 0; i < amount; i++) {
+	for (count = 0; count < amount; count++) {
 
-		memcpy(shownPalette + first + i,
-			currentPalette + first + ((i +
+		memcpy(shownPalette + first + count,
+			currentPalette + first + ((count +
 				(amount - 1 - (FTOI(MUL(position, speed)) % amount))) % amount),
 			sizeof(SDL_Color));
 
 	}
 
 	if (direct) video.changePalette(shownPalette + first, first, amount);
+
+	return;
 
 }
 
@@ -627,6 +677,8 @@ WaterPaletteEffect::WaterPaletteEffect (fixed newDepth, PaletteEffect* nextPE)
 
 	depth = newDepth;
 
+	return;
+
 }
 
 
@@ -641,7 +693,7 @@ WaterPaletteEffect::WaterPaletteEffect (fixed newDepth, PaletteEffect* nextPE)
 void WaterPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, bool isStatic) {
 
 	SDL_Color* currentPalette;
-	int position;
+	int position, count;
 
 	// Apply the next palette effect
 	if (next) next->apply(shownPalette, direct, mspf, isStatic);
@@ -656,16 +708,21 @@ void WaterPaletteEffect::apply (SDL_Color* shownPalette, bool direct, int mspf, 
 
 	if (position < depth) {
 
-		for (int i = 0; i < 256; i++) {
+		for (count = 0; count < 256; count++) {
 
-			shownPalette[i].r = FTOI(currentPalette[i].r * (1023 - DIV(position, depth)));
-			shownPalette[i].g = FTOI(currentPalette[i].g * (1023 - DIV(position, depth)));
-			shownPalette[i].b = FTOI(currentPalette[i].b * (1023 - DIV(position, depth)));
+			shownPalette[count].r = FTOI(currentPalette[count].r *
+				(1023 - DIV(position, depth)));
+			shownPalette[count].g = FTOI(currentPalette[count].g *
+				(1023 - DIV(position, depth)));
+			shownPalette[count].b = FTOI(currentPalette[count].b *
+				(1023 - DIV(position, depth)));
 
 		}
 
 	} else memset(shownPalette, 0, sizeof(SDL_Color) * 256);
 
 	if (direct) video.changePalette(shownPalette, 0, 256);
+
+	return;
 
 }

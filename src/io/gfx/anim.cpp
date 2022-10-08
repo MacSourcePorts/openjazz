@@ -38,12 +38,10 @@ Anim::Anim () {
 	xOffsets = new signed char[19];
 	yOffsets = new signed char[19];
 
-	shootX = shootY = 0;
-	accessoryX = accessoryY = 0;
-	yOffset = 0;
-	frames = 19;
 	frame = 0;
-	accessory = 0;
+	yOffset = 0;
+
+	return;
 
 }
 
@@ -56,6 +54,8 @@ Anim::~Anim () {
 	delete[] sprites;
 	delete[] xOffsets;
 	delete[] yOffsets;
+
+	return;
 
 }
 
@@ -93,6 +93,8 @@ void Anim::setData (int length, signed char sX, signed char sY, signed char aX, 
 	accessory = a;
 	yOffset = y;
 
+	return;
+
 }
 
 
@@ -106,6 +108,8 @@ void Anim::setFrame (int nextFrame, bool looping) {
 
 	if (looping) frame = nextFrame % frames;
 	else frame = (nextFrame >= frames)? frames - 1: nextFrame;
+
+	return;
 
 }
 
@@ -122,6 +126,8 @@ void Anim::setFrameData (Sprite *sprite, signed char x, signed char y) {
 	sprites[frame] = sprite;
 	xOffsets[frame] = x;
 	yOffsets[frame] = y;
+
+	return;
 
 }
 
@@ -255,6 +261,8 @@ fixed Anim::getYOffset () {
  */
 void Anim::draw (fixed x, fixed y, int accessories) {
 
+	Anim* anim;
+
 	sprites[frame]->draw(
 		FTOI(x) + (xOffsets[frame] << 2),
 		FTOI(y) + yOffsets[frame] - yOffset);
@@ -262,7 +270,7 @@ void Anim::draw (fixed x, fixed y, int accessories) {
 
 	if (accessories && accessory) {
 
-		Anim* anim = level->getAnim(accessory);
+		anim = level->getAnim(accessory);
 		anim->setFrame(frame, true);
 		anim->draw(
 			x + ITOF(accessoryX << 2),
@@ -270,6 +278,9 @@ void Anim::draw (fixed x, fixed y, int accessories) {
 			accessories - 1);
 
 	}
+
+
+	return;
 
 }
 
@@ -286,6 +297,8 @@ void Anim::drawScaled (fixed x, fixed y, fixed scale) {
 	// Used to draw bonus level player, so no offset
 	sprites[frame]->drawScaled(FTOI(x), FTOI(y), scale);
 
+	return;
+
 }
 
 
@@ -300,6 +313,8 @@ void Anim::setPalette (SDL_Color *palette, int start, int amount) {
 
 	sprites[frame]->setPalette(palette, start, amount);
 
+	return;
+
 }
 
 
@@ -312,6 +327,8 @@ void Anim::flashPalette (int index) {
 
 	sprites[frame]->flashPalette(index);
 
+	return;
+
 }
 
 
@@ -322,4 +339,8 @@ void Anim::restorePalette () {
 
 	sprites[frame]->restorePalette();
 
+	return;
+
 }
+
+

@@ -26,6 +26,7 @@
 
 
 #include "util.h"
+
 #include "io/file.h"
 
 #include <string.h>
@@ -70,7 +71,7 @@ bool fileExists (const char * fileName) {
  *
  * @return The generated short
  */
-unsigned short int createShort (const unsigned char* data) {
+unsigned short int createShort (unsigned char* data) {
 
 	unsigned short int val;
 
@@ -89,7 +90,7 @@ unsigned short int createShort (const unsigned char* data) {
  *
  * @return The generated int
  */
-int createInt (const unsigned char* data) {
+int createInt (unsigned char* data) {
 
 	unsigned int val;
 

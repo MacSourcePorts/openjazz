@@ -87,6 +87,8 @@ void JJ1LevelPlayer::ground () {
 	// If on a downhill slope, push the player downwards
 	if (!checkMaskUp(F4) && checkMaskUp(F8)) y += F4;
 
+	return;
+
 }
 
 
@@ -519,6 +521,9 @@ void JJ1LevelPlayer::control (unsigned int ticks) {
 	if ((reaction == PR_INVINCIBLE) && (reactionTime < ticks + 2200))
 		if (!isSoundPlaying(S_INVULN)) playSound(S_INVULN);
 
+
+	return;
+
 }
 
 
@@ -819,6 +824,9 @@ void JJ1LevelPlayer::move (unsigned int ticks) {
 
 	} else animType = facing? PA_RFALL: PA_LFALL;
 
+
+	return;
+
 }
 
 
@@ -866,6 +874,9 @@ void JJ1LevelPlayer::view (unsigned int ticks, int mspf, int change) {
 		viewY = ((oldViewY * (speed - mspf)) + (viewY * mspf)) / speed;
 
 	}
+
+
+	return;
 
 }
 
@@ -1043,5 +1054,7 @@ void JJ1LevelPlayer::draw (unsigned int ticks, int change) {
 		panelBigFont->showString(player->name,
 			FTOI(drawX + PXO_MID) - (panelBigFont->getStringWidth(player->name) >> 1),
 			FTOI(drawY - F32 - F16));
+
+	return;
 
 }

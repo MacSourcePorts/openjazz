@@ -19,7 +19,7 @@
 
 int PSP_WantsExit();
 
-void PSP_Init();
+void PSP_PrepareSystem();
 
 void PSP_ErrorNoDatafiles();
 

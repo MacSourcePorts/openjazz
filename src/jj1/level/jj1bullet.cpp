@@ -74,9 +74,11 @@ JJ1Bullet::JJ1Bullet (JJ1Bullet* nextBullet, JJ1LevelPlayer* sourcePlayer, fixed
 
 	}
 
-	sprite = level->getSprite(reinterpret_cast<unsigned char*>(set)[B_SPRITE + direction]);
+	sprite = level->getSprite(((unsigned char *)set)[B_SPRITE + direction]);
 
 	time = ticks + T_BULLET;
+
+	return;
 
 }
 
@@ -87,6 +89,8 @@ JJ1Bullet::JJ1Bullet (JJ1Bullet* nextBullet, JJ1LevelPlayer* sourcePlayer, fixed
 JJ1Bullet::~JJ1Bullet () {
 
 	if (next) delete next;
+
+	return;
 
 }
 
@@ -130,6 +134,9 @@ JJ1LevelPlayer* JJ1Bullet::getSource () {
  */
 JJ1Bullet* JJ1Bullet::step (unsigned int ticks) {
 
+	JJ1Event* event;
+	int count;
+
 	// Process the next bullet
 	if (next) next = next->step(ticks);
 
@@ -141,13 +148,13 @@ JJ1Bullet* JJ1Bullet::step (unsigned int ticks) {
 
 
 		// Check if a player has been hit
-		for (int i = 0; i < nPlayers; i++) {
+		for (count = 0; count < nPlayers; count++) {
 
-			if (players[i].getJJ1LevelPlayer()->overlap(x, y,
+			if (players[count].getJJ1LevelPlayer()->overlap(x, y,
 				ITOF(sprite->getWidth()), ITOF(sprite->getHeight()))) {
 
 				// If the hit was successful, destroy the bullet
-				if (players[i].getJJ1LevelPlayer()->hit(source? source->player: NULL, ticks)) return remove();
+				if (players[count].getJJ1LevelPlayer()->hit(source? source->player: NULL, ticks)) return remove();
 
 			}
 
@@ -158,7 +165,7 @@ JJ1Bullet* JJ1Bullet::step (unsigned int ticks) {
 
 			// Check if an event has been hit
 
-			JJ1Event* event = level->getEvents();
+			event = level->getEvents();
 
 			while (event) {
 
@@ -254,4 +261,9 @@ void JJ1Bullet::draw (int change) {
 	// Show the bullet
 	sprite->draw(FTOI(getDrawX(change)), FTOI(getDrawY(change)), false);
 
+	return;
+
 }
+
+
+

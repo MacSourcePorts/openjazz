@@ -49,12 +49,7 @@ Game::Game () {
 	players = NULL;
 	baseLevel = NULL;
 
-	planetId = -1;
-	mode = NULL;
-	// Default difficulty setting
-	difficulty = 1;
-	sendTime = checkTime = 0;
-	checkX = checkY = 0;
+	return;
 
 }
 
@@ -68,6 +63,8 @@ Game::~Game () {
 
 	if (players) delete[] players;
 	localPlayer = NULL;
+
+	return;
 
 }
 
@@ -163,6 +160,8 @@ int Game::getDifficulty () {
 void Game::setDifficulty (int diff) {
 
 	difficulty = diff;
+
+	return;
 
 }
 
@@ -335,8 +334,13 @@ int Game::playLevel (char* fileName) {
  */
 int Game::play () {
 
-	bool multiplayer = (mode->getMode() != M_SINGLE);
-	bool checkpoint = false;
+	bool multiplayer;
+	bool checkpoint;
+	int ret;
+
+	multiplayer = (mode->getMode() != M_SINGLE);
+	checkpoint = false;
+	planetId = -1;
 
 	// Play the level(s)
 	while (true) {
@@ -347,7 +351,7 @@ int Game::play () {
 
 		// Load and play the level
 
-		int ret = playLevel(levelFile, !multiplayer, checkpoint);
+		ret = playLevel(levelFile, !multiplayer, checkpoint);
 
 		if (ret <= 0) return ret;
 
@@ -406,6 +410,8 @@ void Game::view (int change) {
 	if (TTOF(checkY) > viewY + (canvasH << 9) + change) viewY += change;
 	else if (TTOF(checkY) < viewY + (canvasH << 9) - change) viewY -= change;
 
+	return;
+
 }
 
 
@@ -417,6 +423,8 @@ void Game::view (int change) {
 void Game::resetPlayer (Player *player) {
 
 	player->reset(checkX, checkY);
+
+	return;
 
 }
 
@@ -454,4 +462,7 @@ void Game::addLevelPlayer (Player *player) {
 
 	}
 
+	return;
+
 }
+

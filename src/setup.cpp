@@ -43,6 +43,8 @@
     #define CONFIG_FILE "/<Choices$Write>/OpenJazz/openjazz.cfg"
 #elif __vita__
     #define CONFIG_FILE "ux0:data/jazz/openjazz.cfg"
+#elif __APPLE__
+    #define CONFIG_FILE createString(SDL_GetPrefPath(NULL, "OpenJazz"), "/openjazz.cfg")
 #else
     #define CONFIG_FILE "openjazz.cfg"
 #endif
@@ -62,11 +64,10 @@ Setup::Setup () {
 	characterCols[2] = CHAR_GUN;
 	characterCols[3] = CHAR_WBAND;
 
-	// defaults
+	// scale2x by default
 	scale2x = true;
-	manyBirds = false;
-	leaveUnneeded = true;
-	slowMotion = false;
+
+	return;
 
 }
 
@@ -87,6 +88,7 @@ Setup::~Setup () {
 SetupOptions Setup::load () {
 
 	File* file;
+	int count;
 	SetupOptions cfg = { false, 0, 0, false, 0 };
 #ifdef FULLSCREEN_ONLY
 	cfg.fullScreen = true;
@@ -116,50 +118,50 @@ SetupOptions Setup::load () {
 
 	}
 
+
 	// Read video settings
 	cfg.videoWidth = file->loadShort(MAX_SCREEN_WIDTH);
 	cfg.videoHeight = file->loadShort(MAX_SCREEN_HEIGHT);
-	int vOpt = file->loadChar();
+	count = file->loadChar();
 #ifndef FULLSCREEN_ONLY
-	cfg.fullScreen = vOpt & 1;
+	cfg.fullScreen = count & 1;
 #endif
 #ifdef SCALE
-	if (vOpt >= 10) vOpt = 2;
-	cfg.videoScale = vOpt >> 1;
+	if (count >= 10) count = 2;
+	cfg.videoScale = count >> 1;
 #endif
-	(void)vOpt;
 	cfg.valid = true;
 
 	// Read controls
-	for (int i = 0; i < CONTROLS - 4; i++)
-		controls.setKey(i, (SDLKey)(file->loadInt()));
+	for (count = 0; count < CONTROLS - 4; count++)
+		controls.setKey(count, file->loadInt());
 
-	for (int i = 0; i < CONTROLS; i++)
-		controls.setButton(i, file->loadInt());
+	for (count = 0; count < CONTROLS; count++)
+		controls.setButton(count, file->loadInt());
 
-	for (int i = 0; i < CONTROLS; i++) {
+	for (count = 0; count < CONTROLS; count++) {
 
 		int a, d;
 
 		a = file->loadInt();
 		d = file->loadInt();
-		controls.setAxis(i, a, d);
+		controls.setAxis(count, a, d);
 
 	}
 
-	for (int i = 0; i < CONTROLS; i++) {
+	for (count = 0; count < CONTROLS; count++) {
 
 		int h, d;
 
 		h = file->loadInt();
 		d = file->loadInt();
-		controls.setHat(i, h, d);
+		controls.setHat(count, h, d);
 
 	}
 
 	// Read the player's name
-	for (int i = 0; i < STRING_LENGTH; i++)
-		setup.characterName[i] = file->loadChar();
+	for (count = 0; count < STRING_LENGTH; count++)
+		setup.characterName[count] = file->loadChar();
 
 	setup.characterName[STRING_LENGTH] = 0;
 
@@ -174,13 +176,15 @@ SetupOptions Setup::load () {
 	setSoundVolume(file->loadChar());
 
 	// Read gameplay options
-	int opt = file->loadChar();
-	setup.manyBirds = ((opt & 1) != 0);
-	setup.leaveUnneeded = ((opt & 2) != 0);
-	setup.slowMotion = ((opt & 4) != 0);
-	setup.scale2x = ((opt & 8) == 0);
+	count = file->loadChar();
+	setup.manyBirds = ((count & 1) != 0);
+	setup.leaveUnneeded = ((count & 2) != 0);
+	setup.slowMotion = ((count & 4) != 0);
+	setup.scale2x = ((count & 8) == 0);
+
 
 	delete file;
+
 
 	return cfg;
 
@@ -281,6 +285,11 @@ void Setup::save () {
 
 	file->storeChar(count);
 
+
 	delete file;
 
+
+	return;
+
 }
+
